@@ -8,7 +8,7 @@
     
 //============================================================================================
 
-var ver = 'redminebooster.version.18';
+var ver = 'redminebooster.version.19';
 
 //== local GM storage 4 chrm
 if (typeof GM_deleteValue == 'undefined') {  
@@ -41,6 +41,7 @@ var fullName		= getStoredValue('sfn', false);
 var subtaskAsCtrlN	= getStoredValue('sns', true);
 var subtaskCollpsd	= getStoredValue('ssc', false);
 var timeLogsRemovd	= getStoredValue('tlr', true);
+var savingComEdits	= getStoredValue('sce', false);
 
 
 //functions
@@ -157,7 +158,7 @@ try {
     v += 'input[type="button"].butSelected{background-color:CornflowerBlue;}';
     v += '.dnone{display:none;} .dblock{display:block;}';
     v += '.asi{background-repeat:no-repeat;padding:0 2px 0 18px;width: 115px;height:21px; text-align:left;} .rmAsi2{width:115px;}';
-    v += '.rmBlocker, .rmDuplikat{color:red; position:absolute; top:5px; left:158px; -webkit-transform: rotate(-20deg); -moz-transform: rotate(-20deg);} .rmDuplikat{left:240px; color:green;}';
+    v += '.rmBlocker, .rmDuplikat, .rmTestDevWait{color:red; position:absolute; top:5px; left:158px; -webkit-transform: rotate(-20deg); -moz-transform: rotate(-20deg);} .rmDuplikat{left:240px; color:green;} .rmTestDevWait{left:304px; color:blue; width:165px;}';
     v += '.rmH2Improved{position:relative;width:30%;}';
     v += '#rmFixed{position:fixed;left:0;top:350px;width:16px; height:300px;}';
     v += '#rmFixed > div{width:300px;text-align:center;color:black; position:absolute; top:140px; left:-144px; font-size:15px;-webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg);}';
@@ -174,7 +175,7 @@ try {
 	
 	v += '.assigned_to{padding:0;} .folder{height:30px;} .folder > a{border:0 !important; height:29px;}';
     v += '.rmSetSwitch{float:right;margin-right:0.5em; font-weight:bold; cursor:pointer; position:relative;} .rmSetSwitch:hover{text-decoration:underline;} .rmOpened{text-decoration:none !important;}';
-    v += '.rmSettings{cursor:auto; font-family:Courier;border-top:1px solid #fff; font-size:13px;top:0px; position:absolute; width:454px; height:380px; background:#2C4056; }';
+    v += '.rmSettings{cursor:auto; font-family:Courier;border-top:1px solid #fff; font-size:13px;top:0px;left:-150px; position:absolute; width:604px;  background:#2C4056; }';
     v += '.optOn, .optOff { cursor:pointer;}';
     v += '.optOn .on, .optOff .off{display:inline;} .optOn .off, .optOff .on{display:none;}';
     v += '#header{position: relative; z-index:1000;} #top-menu{position: relative; z-index:1001;}';
@@ -285,7 +286,39 @@ function KeyCheckUp(e) {
     return;
     
 }
-    
+   
+function searchForCommentAndSaveOne() {
+
+	if (savingComEdits) {
+	
+		var res = false;
+		
+		try {
+		
+			var history = getById('history').getElementsByTagName('form');
+		
+			//if there is more than one don`t know which save
+			if (history.length == 1) {
+				
+				var form = history[0];
+				form.submit();
+				
+				res = true;
+			
+			}
+			
+		} catch (e) {
+			res = false;
+		}
+
+	} else {
+		res = false;
+	}
+	
+	return res;
+	
+}  
+	
 function KeyCheckDown(e) {
 
     var path    = [],
@@ -302,26 +335,7 @@ function KeyCheckDown(e) {
 	SPECIAL_KEYS.ctrl 	= 0 + e.ctrlKey;
 	SPECIAL_KEYS.alt 	= 0 + e.altKey;
 	SPECIAL_KEYS.shift 	= 0 + e.shiftaKey;
-	
-    //catch special keys
-    // if (
-		// SPECIAL_KEYS.meta || SPECIAL_KEYS.ctrl || SPECIAL_KEYS.alt || SPECIAL_KEYS.shift
-		// // e.keyCode == 16 ||
-        // // e.keyCode == 17 ||
-        // // e.keyCode == 18
-    // ) {
-
-        // // switch (e.keyCode) {
-            // // case 16: SPECIAL_KEYS.shift = 1; break;
-            // // case 17: SPECIAL_KEYS.ctrl  = 1; break;
-            // // case 18: SPECIAL_KEYS.alt   = 1; break;
-        // // }
-        
-        // return;
-        
-    // }
     
-        //console.log(SPECIAL_KEYS);
     if (!SPECIAL_KEYS.shift && !SPECIAL_KEYS.ctrl && !SPECIAL_KEYS.alt) {
         if (path.indexOf('update') > -1             ||
             path.indexOf('new-relation-form') > -1  ||
@@ -393,8 +407,15 @@ function KeyCheckDown(e) {
         
         case 's+CTRL':
         case 's+META':
-			try { getById('issue-form').submit(); showSaving(); } catch (e) {console.log(e);}
-			try { getById('move_form').submit();  showSaving(); } catch (e) {console.log(e);}
+			
+			//first try to save comment
+			var saveComment = searchForCommentAndSaveOne();
+			
+			if (!saveComment) {
+				try { getById('issue-form').submit(); showSaving(); } catch (e) {console.log(e);}
+				try { getById('move_form').submit();  showSaving(); } catch (e) {console.log(e);}
+			}
+
         break;        
 		case 'n+CTRL':
 		case 'n+META':
@@ -707,18 +728,21 @@ try{
 	
 }catch(e){console.log(e);}
 
-//test if is blocked or duplicated
+//test if is blocked, duplicated or test_dev_wait
 try {
 
-    var isBlocked   = false,
-        isDuplicate = false,
-        rels 		= getById('relations');
+    var isBlocked   	= false,
+        isDuplicate 	= false,
+        isTestDevWait 	= false,
+        rels 			= getById('relations'),
+		h2 				= getById('content').getElementsByTagName('h2')[0],
+		dp;
 		
 	if (rels) {
 		
 		var trs = rels.getElementsByTagName('tr'),
 			a,
-		   tds;
+		    tds;
 			
 		for (var i = 0, ci = trs.length; i < ci; i++) {
 			
@@ -736,9 +760,6 @@ try {
 			}
 		
 		}
-		
-		var h2 = getById('content').getElementsByTagName('h2')[0],
-			dp;
 			
 		if (isBlocked) {
 			
@@ -760,6 +781,35 @@ try {
 			dp.innerHTML = 'DUPLICATE';
 			
 		}
+		
+	}
+	
+	//test dev wait
+	var status = document.getElementsByTagName('td'),
+		cs = status.length;
+			
+	for (var q = 0; q < cs; ++q) {
+	
+		if (status[q].className == 'status') {
+		
+			if (status[q].innerHTML.match(/.*(test dev wait).*/i) ) {
+			
+				isTestDevWait = true;
+				break;
+				
+			}
+		
+		}
+		
+	}
+		
+	if (isTestDevWait) {
+		
+		dp = createElement('div');
+		h2.className = 'rmH2Improved';
+		h2.appendChild(dp);
+		dp.className = 'rmTestDevWait';
+		dp.innerHTML = 'TEST DEV WAIT';
 		
 	}
 
@@ -1115,6 +1165,7 @@ try {
         {setName: 'sns', description: 'New subtask by CTRL+N', 			defau:true},
         {setName: 'ssc', description: 'Subtasks collapsed by default', 	defau:false, nevv: true},
         {setName: 'tlr', description: 'Remove time logs in edit', 		defau:true,  nevv: true},
+        {setName: 'sce', description: 'CTRL+S with comments edits (see /1)', 	defau:false, nevv: true},
 		{description: '[save button]'},
 		{description: ''},
 		{description: '* * Other features * * *'},
@@ -1127,10 +1178,14 @@ try {
 		{description: 'Selects to buttons option'},
 		{description: 'Sorting by polish in Assignee'},
 		{description: 'Fancy information about blocking & duplicates'},
+		{description: 'Fancy information about test dev wait status', nevv: true},
 		{description: 'Avatars in tasks lists'},
 		{description: 'Thumbnails of images'},
 		{description: 'Checking availability of new versions'},
-		{description: 'Collapsing groups in subtasks list', nevv: true}
+		{description: 'Collapsing groups in subtasks list'},
+		{description: '/1 Comment edit has higher priority than ticket update'},
+		{description: '&nbsp;&nbsp;&nbsp;To save com. edit with shortcut you can`t have 2+ opened edits'}
+		
     ];
 	
     //add options to settings
