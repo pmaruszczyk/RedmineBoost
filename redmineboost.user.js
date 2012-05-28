@@ -257,7 +257,7 @@ try {
         if (updateDiv) {
 		
 			if (withMore) {
-				var more = getById('issue_descr_fields');
+				var more = getById('issue_description_and_toolbar');
 				more.style.display = 'block';
 			}
 			
@@ -1305,7 +1305,7 @@ try {
     addShortcutTo('e','.icon-edit');
     addShortcutTo('n','.new-issue');
     try{addShortcutTo('r', getById('relations').getElementsByTagName('strong')[0]); }catch(e){}
-    try{addShortcutTo('m', getById('issue-form').getElementsByTagName('small')[0].getElementsByTagName('a')[0]); }catch(e){}
+    try{addShortcutTo('m', getById('issue_description_and_toolbar').parentNode.getElementsByTagName('label')[0]); }catch(e){}
 	try{addShortcutTo('c', getById('issue-form').getElementsByTagName('fieldset')[2].getElementsByTagName('legend')[0]); }catch(e){}
 	
 	var bclass 	= document.body.className;
