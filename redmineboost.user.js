@@ -769,15 +769,15 @@ try {
 		for (var i = 0, ci = trs.length; i < ci; i++) {
 			
 			tds = trs[i].getElementsByTagName('td');
-			a   = tds[0].getElementsByTagName('a')[0];
+			a   = tds[1].getElementsByTagName('a')[0];
 			
-			if (tds[0].innerHTML.match(/.*(blocked by|zablokowane przez).*/) &&
+			if (tds[1].innerHTML.match(/.*(blocked by|zablokowane przez).*/) &&
 				a.className.indexOf('closed') == -1
 			) {
 				isBlocked = true;
 			}
 			
-			if (tds[0].innerHTML.match(/.*(duplicates|duplikuje).*/)) {
+			if (tds[1].innerHTML.match(/.*(duplicates|duplikuje).*/)) {
 				isDuplicate = true;
 			}
 		
