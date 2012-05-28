@@ -9,7 +9,7 @@
     
 //============================================================================================
 
-var ver = 'redminebooster.version.19';
+var ver = 'redminebooster.version.20';
 
 //== local GM storage 4 chrm
 if (typeof GM_deleteValue == 'undefined') {  
@@ -73,7 +73,7 @@ function MD5(s) {function L(b,a){return(b<<a)|(b>>>(32-a))}function K(k,b){var F
 
 function getCsgMail(name, name1st) {
 
-    var n = name;[
+    var n = name;
     if (!name1st) {
 		n = n.split(' ').reverse().join(' ');
     }
@@ -354,6 +354,7 @@ function KeyCheckDown(e) {
     var keyShortcut = '' + String.fromCharCode(e.keyCode).replace(' ','').toLowerCase();
    
     //numbers detect
+	
     if ( (e.keyCode >= 48 && e.keyCode < 57 ) ||
          (e.keyCode >= 96 && e.keyCode < 105)
     ) {
@@ -960,7 +961,9 @@ try {
 					cell.className = 'rmCell';
 					curGroupIndex = getSubtaskIndent(tb[u]);
 					
-					if (taskno.toLowerCase().indexOf('group') > -1) {
+					if (taskno.toLowerCase().indexOf('group') 	> -1 ||
+						taskno.toLowerCase().indexOf('feature') > -1
+					) {
 					
 						if (curGroupIndex > lastGroupIndex+1) {
 							lastGroupColor = [];
