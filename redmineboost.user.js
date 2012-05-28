@@ -73,9 +73,9 @@ function MD5(s) {function L(b,a){return(b<<a)|(b>>>(32-a))}function K(k,b){var F
 
 function getCsgMail(name, name1st) {
 
-    var n = name;
-    if (!name1st) {
-        n = n.split(' ').reverse().join(' ');
+    var n = name;[
+    if (!name1st) 
+		n = n.split(' ').reverse().join(' ');
     }
     
     return replacePL(n.replace(' ','.').toLowerCase()).replace(/[^\.a-z]/g,'') + '@cantstopgames.com';
@@ -490,7 +490,7 @@ try {
 
 function orderSelect(selectElemID) {
 
-    var alphabet = 'AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻaąbcćdeęfghijklłmnńoóprsśtuwxyz',
+    var alphabet = '&>AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻaąbcćdeęfghijklłmnńoóprsśtuwxyz',
         se = document.getElementById(selectElemID),
         op,
         oa  = [];
@@ -536,8 +536,6 @@ function orderSelect(selectElemID) {
 
 }
 
-//orderSelect('issue..'); moved to s2b();
-
 } catch(e){console.log(e);}
 
 // buttons
@@ -547,6 +545,11 @@ try{
     function cutName(name, revert) {
 		
         var tmp, tmp2;
+		
+		if (name.match(/>>/)) {
+			return name;
+		}
+		
         tmp = name.split(' ');
         
         if (revert) {
@@ -567,7 +570,8 @@ try{
         
         ////
         var swch        = createElement('span'),
-            userid      = getById('loggedas').getElementsByTagName('a')[0].href.split('/'),
+            //-userid      = getById('loggedas').getElementsByTagName('a')[0].href.split('/'),
+            userid      = getById('loggedas').getElementsByTagName('a')[0].innerHTML.split('.').reverse().join(' '),
             selme       = getById(selectIDDD),
             GM_key      = selectIDDD + '_gm_key';
             
@@ -615,22 +619,31 @@ try{
                 cont.id = contName;
                 for (var i = 0; i < selme.childNodes.length; ++i) {
                 
-                    var opt = selme.childNodes[i], el;
+                    var opt = selme.childNodes[i], 
+						el,
+						optVal;
+						
                     if (opt.nodeName != 'OPTION') {
                         continue;
                     }
                 
                     el = createElement('input');
-                        
+                    
+					optVal = opt.innerHTML.replace(/&gt;/g, '>').replace(/&lt;/g, '<');
+					
                     el.type  = 'button';
-                    el.title = (selectID == 'issue_assigned_to_id') ? opt.innerHTML : '';
-                    el.value = (selectID == 'issue_assigned_to_id') ? cutName(opt.innerHTML) : opt.innerHTML;
+                    el.title = (selectID == 'issue_assigned_to_id') ? optVal : '';
+                    el.value = (selectID == 'issue_assigned_to_id') ? cutName(optVal) : optVal;
                     el.rel   = opt.value;
                     
                     if (avatars && opt.innerHTML !== '') {
                     
+						if (optVal.match(/<</)) {
+							optVal = userid;
+						}
+					
                         el.className = 'asi';
-                        el.style.cssText = 'background-image:url(' + getGravatar( getCsgMail(opt.innerHTML, nameFirst) ) + ')';
+                        el.style.cssText = 'background-image:url(' + getGravatar( getCsgMail(optVal, nameFirst) ) + ')';
     
                     } else if (opt.innerHTML === '') {
                         
@@ -665,14 +678,13 @@ try{
 								continue;
 							}
 							
-							//-console.log(selme.childNodes[i].value, e.target.rel);
                             if (selme.childNodes[i].value == e.target.rel) {
+							
                                 selme.childNodes[i].selected = "selected";
                                 e.target.className += ' butSelected';
+								
                             } else {
-                                //-delete selme.childNodes[i].selected;
                                 selme.childNodes[i].removeAttribute('selected');
-								//-console.log(selme.childNodes[i].selected);
                             }
                             
                         }
