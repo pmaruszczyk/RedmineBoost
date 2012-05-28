@@ -3,6 +3,7 @@
 // @namespace      a
 // @include        http://redmine.csgbox.com*
 // @include        http://pm.csgbox.com*
+// @include        http://redmine-dev.csgbox.com*
 // @author         Pawel 'lord_t' Maruszczyk
 // ==/UserScript==
     
@@ -377,7 +378,15 @@ function KeyCheckDown(e) {
                     }
                     
                     break;
-    
+		case 'c':   if (updateDiv) {
+		
+                        showEdit(0);
+						getById('notes').focus();
+						//.focus();
+						
+                    }
+                    
+                    break;
         case 'm':   showEdit(1);  break;
         case 'n':   location.href = getElementsByClassName('new-issue')[0].href;  break;
         case 'r':   
@@ -790,7 +799,8 @@ try {
 			
 	for (var q = 0; q < cs; ++q) {
 	
-		if (status[q].className == 'status') {
+		var parentQth = status[q].parentNode.getElementsByTagName('th');
+		if (status[q].className == 'status' && parentQth.length) {
 		
 			if (status[q].innerHTML.match(/.*(test dev wait).*/i) ) {
 			
@@ -1281,6 +1291,7 @@ try {
     addShortcutTo('n','.new-issue');
     try{addShortcutTo('r', getById('relations').getElementsByTagName('strong')[0]); }catch(e){}
     try{addShortcutTo('m', getById('issue-form').getElementsByTagName('small')[0].getElementsByTagName('a')[0]); }catch(e){}
+	try{addShortcutTo('c', getById('issue-form').getElementsByTagName('fieldset')[2].getElementsByTagName('legend')[0]); }catch(e){}
 	
 	var bclass 	= document.body.className;
     try{ 
