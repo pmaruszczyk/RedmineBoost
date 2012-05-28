@@ -74,7 +74,7 @@ function MD5(s) {function L(b,a){return(b<<a)|(b>>>(32-a))}function K(k,b){var F
 function getCsgMail(name, name1st) {
 
     var n = name;[
-    if (!name1st) 
+    if (!name1st) {
 		n = n.split(' ').reverse().join(' ');
     }
     
