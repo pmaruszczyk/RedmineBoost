@@ -9,7 +9,7 @@
     
 //============================================================================================
 
-var ver = 'redminebooster.version.20';
+var ver = 'redminebooster.version.21';
 
 //== local GM storage 4 chrm
 if (typeof GM_deleteValue == 'undefined') {  
@@ -43,6 +43,7 @@ var subtaskAsCtrlN	= getStoredValue('sns', true);
 var subtaskCollpsd	= getStoredValue('ssc', false);
 var timeLogsRemovd	= getStoredValue('tlr', true);
 var savingComEdits	= getStoredValue('sce', false);
+var newHistFotrmat	= getStoredValue('nhf', true);
 
 
 //functions
@@ -72,6 +73,10 @@ function replacePL(s) {
 function MD5(s) {function L(b,a){return(b<<a)|(b>>>(32-a))}function K(k,b){var F,a,d,x,c;d=(k&2147483648);x=(b&2147483648);F=(k&1073741824);a=(b&1073741824);c=(k&1073741823)+(b&1073741823);if(F&a){return(c^2147483648^d^x)}if(F|a){if(c&1073741824){return(c^3221225472^d^x)}else{return(c^1073741824^d^x)}}else{return(c^d^x)}}function r(a,c,b){return(a&c)|((~a)&b)}function q(a,c,b){return(a&b)|(c&(~b))}function p(a,c,b){return(a^c^b)}function n(a,c,b){return(c^(a|(~b)))}function u(G,F,aa,Z,k,H,I){G=K(G,K(K(r(F,aa,Z),k),I));return K(L(G,H),F)}function f(G,F,aa,Z,k,H,I){G=K(G,K(K(q(F,aa,Z),k),I));return K(L(G,H),F)}function D(G,F,aa,Z,k,H,I){G=K(G,K(K(p(F,aa,Z),k),I));return K(L(G,H),F)}function t(G,F,aa,Z,k,H,I){G=K(G,K(K(n(F,aa,Z),k),I));return K(L(G,H),F)}function e(k){var G;var d=k.length;var c=d+8;var b=(c-(c%64))/64;var F=(b+1)*16;var H=Array(F-1);var a=0;var x=0;while(x<d){G=(x-(x%4))/4;a=(x%4)*8;H[G]=(H[G]|(k.charCodeAt(x)<<a));x++}G=(x-(x%4))/4;a=(x%4)*8;H[G]=H[G]|(128<<a);H[F-2]=d<<3;H[F-1]=d>>>29;return H}function B(c){var b="",d="",k,a;for(a=0;a<=3;a++){k=(c>>>(a*8))&255;d="0"+k.toString(16);b=b+d.substr(d.length-2,2)}return b}function J(b){b=b.replace(/\r\n/g,"\n");var a="";for(var k=0;k<b.length;k++){var d=b.charCodeAt(k);if(d<128){a+=String.fromCharCode(d)}else{if((d>127)&&(d<2048)){a+=String.fromCharCode((d>>6)|192);a+=String.fromCharCode((d&63)|128)}else{a+=String.fromCharCode((d>>12)|224);a+=String.fromCharCode(((d>>6)&63)|128);a+=String.fromCharCode((d&63)|128)}}}return a}var C=Array();var P,h,E,v,g,Y,X,W,V;var S=7,Q=12,N=17,M=22;var A=5,z=9,y=14,w=20;var o=4,m=11,l=16,j=23;var U=6,T=10,R=15,O=21;s=J(s);C=e(s);Y=1732584193;X=4023233417;W=2562383102;V=271733878;for(P=0;P<C.length;P+=16){h=Y;E=X;v=W;g=V;Y=u(Y,X,W,V,C[P+0],S,3614090360);V=u(V,Y,X,W,C[P+1],Q,3905402710);W=u(W,V,Y,X,C[P+2],N,606105819);X=u(X,W,V,Y,C[P+3],M,3250441966);Y=u(Y,X,W,V,C[P+4],S,4118548399);V=u(V,Y,X,W,C[P+5],Q,1200080426);W=u(W,V,Y,X,C[P+6],N,2821735955);X=u(X,W,V,Y,C[P+7],M,4249261313);Y=u(Y,X,W,V,C[P+8],S,1770035416);V=u(V,Y,X,W,C[P+9],Q,2336552879);W=u(W,V,Y,X,C[P+10],N,4294925233);X=u(X,W,V,Y,C[P+11],M,2304563134);Y=u(Y,X,W,V,C[P+12],S,1804603682);V=u(V,Y,X,W,C[P+13],Q,4254626195);W=u(W,V,Y,X,C[P+14],N,2792965006);X=u(X,W,V,Y,C[P+15],M,1236535329);Y=f(Y,X,W,V,C[P+1],A,4129170786);V=f(V,Y,X,W,C[P+6],z,3225465664);W=f(W,V,Y,X,C[P+11],y,643717713);X=f(X,W,V,Y,C[P+0],w,3921069994);Y=f(Y,X,W,V,C[P+5],A,3593408605);V=f(V,Y,X,W,C[P+10],z,38016083);W=f(W,V,Y,X,C[P+15],y,3634488961);X=f(X,W,V,Y,C[P+4],w,3889429448);Y=f(Y,X,W,V,C[P+9],A,568446438);V=f(V,Y,X,W,C[P+14],z,3275163606);W=f(W,V,Y,X,C[P+3],y,4107603335);X=f(X,W,V,Y,C[P+8],w,1163531501);Y=f(Y,X,W,V,C[P+13],A,2850285829);V=f(V,Y,X,W,C[P+2],z,4243563512);W=f(W,V,Y,X,C[P+7],y,1735328473);X=f(X,W,V,Y,C[P+12],w,2368359562);Y=D(Y,X,W,V,C[P+5],o,4294588738);V=D(V,Y,X,W,C[P+8],m,2272392833);W=D(W,V,Y,X,C[P+11],l,1839030562);X=D(X,W,V,Y,C[P+14],j,4259657740);Y=D(Y,X,W,V,C[P+1],o,2763975236);V=D(V,Y,X,W,C[P+4],m,1272893353);W=D(W,V,Y,X,C[P+7],l,4139469664);X=D(X,W,V,Y,C[P+10],j,3200236656);Y=D(Y,X,W,V,C[P+13],o,681279174);V=D(V,Y,X,W,C[P+0],m,3936430074);W=D(W,V,Y,X,C[P+3],l,3572445317);X=D(X,W,V,Y,C[P+6],j,76029189);Y=D(Y,X,W,V,C[P+9],o,3654602809);V=D(V,Y,X,W,C[P+12],m,3873151461);W=D(W,V,Y,X,C[P+15],l,530742520);X=D(X,W,V,Y,C[P+2],j,3299628645);Y=t(Y,X,W,V,C[P+0],U,4096336452);V=t(V,Y,X,W,C[P+7],T,1126891415);W=t(W,V,Y,X,C[P+14],R,2878612391);X=t(X,W,V,Y,C[P+5],O,4237533241);Y=t(Y,X,W,V,C[P+12],U,1700485571);V=t(V,Y,X,W,C[P+3],T,2399980690);W=t(W,V,Y,X,C[P+10],R,4293915773);X=t(X,W,V,Y,C[P+1],O,2240044497);Y=t(Y,X,W,V,C[P+8],U,1873313359);V=t(V,Y,X,W,C[P+15],T,4264355552);W=t(W,V,Y,X,C[P+6],R,2734768916);X=t(X,W,V,Y,C[P+13],O,1309151649);Y=t(Y,X,W,V,C[P+4],U,4149444226);V=t(V,Y,X,W,C[P+11],T,3174756917);W=t(W,V,Y,X,C[P+2],R,718787259);X=t(X,W,V,Y,C[P+9],O,3951481745);Y=K(Y,h);X=K(X,E);W=K(W,v);V=K(V,g)}var i=B(Y)+B(X)+B(W)+B(V);return i.toLowerCase()}
 
 function getCsgMail(name, name1st) {
+
+	if (name.indexOf('@') > -1) {
+		return name;
+	}
 
     var n = name;
     if (!name1st) {
@@ -189,6 +194,28 @@ try {
         v += '#header{position: fixed !important; top:1.6em;width:99%;border-bottom:6px solid #eee;} ';
     }
     
+	if (newHistFotrmat) {
+		v += '#history h4{width:230px; float:left; margin:0; padding:0;}';
+		v += '#history .journal{margin:0; padding:0; }';
+		v += '#history .details{width:auto; margin:0; padding:0 0 0 240px;}';
+        v += '#history h4 img.gravatar{border:#eee solid; border-width:0 1px 1px 1px; margin:0 0 1px; float:left;}';
+        v += '#history h4 .rmHistoryDiv{ float:left; margin-left:7px; width: 146px;}';
+        v += '#history h4 .rmHistoryDiv .rmDate{color:#444;} #history h4 div .rmDate:hover{color:#C61A1A;}';
+        v += '#history h4 a.journal-link{float:right;color:white;} #history div:hover h4 a.journal-link:hover{color:#C61A1A;}';
+        v += '#history > div.rmHistoryDivOdd h4 a.journal-link{color:#eee;}';
+        v += '#history div:hover h4 a.journal-link{color:#2A5685;}';
+        v += '#history > div:hover,#history > div.rmHistoryDivOdd:hover {background:#ddd; }';
+        v += '#history p {padding-left: 225px; margin-bottom:0; margin-top:0; padding-bottom:12px;}';
+        v += '#history > div{min-height:36px; border-top:1px solid #eee;}';
+        v += '#history > div.rmHistoryShort{border-top:0;}';
+        v += '#history > div.rmHistoryDivOdd{background:#eee;}';
+        v += '#history .rmHistoryShort h4 img{height:28px; opacity:0.5;margin: 0 2px; border:0;}';
+        v += '#history .rmHistoryShort .rmArchiver{display:none;}';
+        v += '#history div.wiki pre{margin-left:225px;}';
+		v += '#history blockquote{margin-left: 250px;} #history div.rmHistoryDivOdd blockquote,#history > div:hover blockquote{border-color:#bbb;}';
+		v += '#history blockquote blockquote{margin-left:10px;} #history blockquote p {padding-left:10px;}';
+    }
+	
     v += '</style>';
     s.innerHTML = v;
 
@@ -569,13 +596,16 @@ try{
 
     function select2button(selectIDDD, avatars) {
         
+		try{
+		
         ////
         var swch        = createElement('span'),
-            //-userid      = getById('loggedas').getElementsByTagName('a')[0].href.split('/'),
-            userid      = getById('loggedas').getElementsByTagName('a')[0].innerHTML.split('.').reverse().join(' '),
+            userid      = getById('loggedas').getElementsByTagName('a')[0].innerHTML,
             selme       = getById(selectIDDD),
             GM_key      = selectIDDD + '_gm_key';
             
+		} catch (e) {console.log(e);}
+	
         allButtonsGlob[selectIDDD]  = GM_getValue(GM_key);
 
         //switcher
@@ -642,7 +672,7 @@ try{
 						if (optVal.match(/<</)) {
 							optVal = userid;
 						}
-					
+						
                         el.className = 'asi';
                         el.style.cssText = 'background-image:url(' + getGravatar( getCsgMail(optVal, nameFirst) ) + ')';
     
@@ -806,7 +836,7 @@ try {
 		
 	}
 	
-	//test dev wait
+	//suspended status
 	var status = document.getElementsByTagName('td'),
 		cs = status.length;
 			
@@ -815,7 +845,7 @@ try {
 		var parentQth = status[q].parentNode.getElementsByTagName('th');
 		if (status[q].className == 'status' && parentQth.length) {
 		
-			if (status[q].innerHTML.match(/.*(test dev wait).*/i) ) {
+			if (status[q].innerHTML.match(/.*(suspended).*/i) ) {
 			
 				isTestDevWait = true;
 				break;
@@ -832,7 +862,7 @@ try {
 		h2.className = 'rmH2Improved';
 		h2.appendChild(dp);
 		dp.className = 'rmTestDevWait';
-		dp.innerHTML = 'TEST DEV WAIT';
+		dp.innerHTML = 'SUSPENDED';
 		
 	}
 
@@ -1138,6 +1168,56 @@ try{
 
 } catch (e) {console.log('hiding time logging', e);}
 
+//improved history log
+try{
+
+	if (newHistFotrmat) {
+
+		var hist = getById('history'),
+			h4s  = hist.getElementsByTagName('h4'),
+			imgs = hist.getElementsByTagName('img'),
+			as, dva, lastMan, curMan;
+			
+		for (var i = 0, ci = imgs.length; i < ci; ++i) {
+			
+			if (h4s[i]) {
+			
+				h4s[i].innerHTML = h4s[i].innerHTML.replace(/Updated by|Uaktualnione przez/i, '');
+				
+				dva = createElement('div');
+				dva.className = 'rmHistoryDiv';
+				as = h4s[i].getElementsByTagName('a');
+				
+				curMan = as[as.length - 2].innerHTML;
+				if (lastMan == curMan) {
+					h4s[i].parentNode.className += ' rmHistoryShort '+ (i%2? 'rmHistoryDivOdd': '');
+				} else {
+					lastMan = curMan;
+				}
+				h4s[i].parentNode.className += (i%2? ' rmHistoryDivOdd': '');
+				
+				as[as.length - 1].className = 'rmDate';
+				as[as.length - 2].className = 'rmArchiver';
+				
+				dva.appendChild(as[as.length - 2]);
+				dva.lastChild.appendChild(createElement('br'));
+				dva.appendChild(as[as.length - 1]);
+				dva.appendChild(as[as.length - 1]);
+				dva.appendChild(h4s[i].lastChild);
+				dva.appendChild(as[as.length - 1]);
+				
+				h4s[i].appendChild(dva);
+				
+			}
+			
+			imgs[i].src = imgs[i].src.replace('&size=24', '&size=30');
+			
+		}
+	
+	}
+
+} catch (e) {console.log('improved history log', e);}
+
 //script panel
 try {
 
@@ -1188,9 +1268,10 @@ try {
         {setName: 'sma', description: 'Use medium avatars in list', 	defau:false},
         {setName: 'sfn', description: 'Full name in tasks` list', 		defau:false},
         {setName: 'sns', description: 'New subtask by CTRL+N', 			defau:true},
-        {setName: 'ssc', description: 'Subtasks collapsed by default', 	defau:false, nevv: true},
-        {setName: 'tlr', description: 'Remove time logs in edit', 		defau:true,  nevv: true},
-        {setName: 'sce', description: 'CTRL+S with comments edits (see /1)', 	defau:false, nevv: true},
+        {setName: 'ssc', description: 'Subtasks collapsed by default', 	defau:false},
+        {setName: 'tlr', description: 'Remove time logs in edit', 		defau:true},
+        {setName: 'sce', description: 'CTRL+S with comments edits (see /1)', 	defau:false},
+        {setName: 'nhf', description: 'Short & fancy history layout', 	defau:true, nevv: true},
 		{description: '[save button]'},
 		{description: ''},
 		{description: '* * Other features * * *'},
@@ -1203,7 +1284,7 @@ try {
 		{description: 'Selects to buttons option'},
 		{description: 'Sorting by polish in Assignee'},
 		{description: 'Fancy information about blocking & duplicates'},
-		{description: 'Fancy information about test dev wait status', nevv: true},
+		{description: 'Fancy information about suspended status', nevv: true},
 		{description: 'Avatars in tasks lists'},
 		{description: 'Thumbnails of images'},
 		{description: 'Checking availability of new versions'},
