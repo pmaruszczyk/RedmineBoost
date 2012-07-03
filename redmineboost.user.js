@@ -199,21 +199,19 @@ try {
 		v += '#history .journal{margin:0; padding:0; }';
 		v += '#history .details{width:auto; margin:0; padding:0 0 0 240px;}';
         v += '#history h4 img.gravatar{border:#eee solid; border-width:0 1px 1px 1px; margin:0 0 1px; float:left;}';
-        v += '#history h4 .rmHistoryDiv{ float:left; margin-left:7px; width: 146px;}';
+        v += '#history h4 .rmHistoryDiv{ float:left; margin-left:7px; width: 170px;}';
         v += '#history h4 .rmHistoryDiv .rmDate{color:#444;} #history h4 div .rmDate:hover{color:#C61A1A;}';
         v += '#history h4 a.journal-link{float:right;color:white;} #history div:hover h4 a.journal-link:hover{color:#C61A1A;}';
         v += '#history > div.rmHistoryDivOdd h4 a.journal-link{color:#eee;}';
         v += '#history div:hover h4 a.journal-link{color:#2A5685;}';
         v += '#history > div:hover,#history > div.rmHistoryDivOdd:hover {background:#ddd; }';
-        v += '#history p {padding-left: 225px; margin-bottom:0; margin-top:0; padding-bottom:12px;}';
+        v += '#history p { margin-bottom:0; margin-top:0; padding-bottom:12px;}';
         v += '#history > div{min-height:36px; border-top:1px solid #eee;}';
         v += '#history > div.rmHistoryShort{border-top:0;}';
         v += '#history > div.rmHistoryDivOdd{background:#eee;}';
+        v += '#history .journal .wiki{padding-left:225px;}';
         v += '#history .rmHistoryShort h4 img{height:28px; opacity:0.5;margin: 0 2px; border:0;}';
         v += '#history .rmHistoryShort .rmArchiver{display:none;}';
-        v += '#history div.wiki pre{margin-left:225px;}';
-		v += '#history blockquote{margin-left: 250px;} #history div.rmHistoryDivOdd blockquote,#history > div:hover blockquote{border-color:#bbb;}';
-		v += '#history blockquote blockquote{margin-left:10px;} #history blockquote p {padding-left:10px;}';
     }
 	
     v += '</style>';
