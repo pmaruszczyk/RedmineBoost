@@ -205,13 +205,16 @@ try {
         v += '#history > div.rmHistoryDivOdd h4 a.journal-link{color:#eee;}';
         v += '#history div:hover h4 a.journal-link{color:#2A5685;}';
         v += '#history > div:hover,#history > div.rmHistoryDivOdd:hover {background:#ddd; }';
-        v += '#history p { margin-bottom:0; margin-top:0; padding-bottom:12px;}';
+        v += '#history p {padding-left: 225px; margin-bottom:0; margin-top:0; padding-bottom:12px;}';
         v += '#history > div{min-height:36px; border-top:1px solid #eee;}';
         v += '#history > div.rmHistoryShort{border-top:0;}';
         v += '#history > div.rmHistoryDivOdd{background:#eee;}';
         v += '#history .journal .wiki{padding-left:225px;}';
         v += '#history .rmHistoryShort h4 img{height:28px; opacity:0.5;margin: 0 2px; border:0;}';
         v += '#history .rmHistoryShort .rmArchiver{display:none;}';
+        v += '#history div.wiki pre{margin-left:225px;}';
+		v += '#history blockquote{margin-left: 250px;} #history div.rmHistoryDivOdd blockquote,#history > div:hover blockquote{border-color:#bbb;}';
+		v += '#history blockquote blockquote{margin-left:10px;} #history blockquote p {padding-left:10px;}';
     }
 	
     v += '</style>';
@@ -556,7 +559,11 @@ function orderSelect(selectElemID) {
             
         } catch(e){}
             
-        se.appendChild(oa[i]);
+		if (oa[i].innerHTML.indexOf('RTT') > -1) {
+			oa[i].parentNode.removeChild(oa[i]);
+		} else {
+			se.appendChild(oa[i]);
+		}
         
     }
 
