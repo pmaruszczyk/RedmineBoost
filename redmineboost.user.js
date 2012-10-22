@@ -5,11 +5,16 @@
 // @include        http://pm.csgbox.com*
 // @include        http://redmine-dev.csgbox.com*
 // @author         Pawel 'lord_t' Maruszczyk
+// @version        22.0
+// @grant GM_setValue
+// @grant GM_getValue
+// @grant GM_addStyle
+// @grant GM_deleteValue
 // ==/UserScript==
     
 //============================================================================================
 
-var ver = 'redminebooster.version.21';
+var ver = 'redminebooster.version.22';
 
 //== local GM storage 4 chrm
 if (typeof GM_deleteValue == 'undefined') {  
@@ -45,6 +50,38 @@ var timeLogsRemovd	= getStoredValue('tlr', true);
 var savingComEdits	= getStoredValue('sce', false);
 var newHistFotrmat	= getStoredValue('nhf', true);
 
+//colors
+var memoryKey = 'colors2';
+function getStoredColor(taskid) {
+
+	var colors;
+	taskid = taskid.split('#')[1];
+	
+	try {
+		colors = JSON.parse(getStoredValue(memoryKey, undefined));
+	} catch (e) {
+		colors = false;
+	}
+	
+	return colors && colors['#'+taskid];
+}
+
+function storeColor(taskid, color) {
+	
+	var colors;
+	try {
+		colors = JSON.parse(getStoredValue(memoryKey, undefined));
+	} catch (e) {
+		colors = false;
+	}
+	if (!colors) {
+		colors = {};
+	}
+	
+	colors[taskid] = color;
+	GM_setValue(memoryKey, JSON.stringify(colors));
+	//console.log(GM_getValue(memoryKey), JSON.stringify(colors));
+}
 
 //functions
 function getElementsByClassName (cn,ctx) {
@@ -162,7 +199,7 @@ try {
 	v += '#top-menu .rmNewVersionAvailable a {color:red;background:white;}';
     v += '.rmbPreview{width:500px;position:fixed;left:300px;top:20px;display:none; z-index:1100;}';
     v += 'input[type="button"].butSelected{background-color:CornflowerBlue;}';
-    v += '.dnone{display:none;} .dblock{display:block;}';
+    v += '.dnone, .rmColorBoxA > div.dnone{display:none;} .dblock{display:block;}';
     v += '.asi{background-repeat:no-repeat;padding:0 2px 0 18px;width: 115px;height:21px; text-align:left;} .rmAsi2{width:115px;}';
     v += '.rmBlocker, .rmDuplikat, .rmTestDevWait{color:red; position:absolute; top:5px; left:158px; -webkit-transform: rotate(-20deg); -moz-transform: rotate(-20deg);} .rmDuplikat{left:240px; color:green;} .rmTestDevWait{left:304px; color:blue; width:165px;}';
     v += '.rmH2Improved{position:relative;width:30%;}';
@@ -185,6 +222,12 @@ try {
     v += '.optOn, .optOff { cursor:pointer;}';
     v += '.optOn .on, .optOff .off{display:inline;} .optOn .off, .optOff .on{display:none;}';
     v += '#header{position: relative; z-index:1000;} #top-menu{position: relative; z-index:1001;}';
+    v += '.rmColorBoxA:hover > div{text-decoration:underline;} .rmColorBoxA > div{display:inline-block;} .rmColorBoxA {position:relative;cursor:pointer;}';
+    v += '.rmColorBox{position:relative;border:1px solid gray; width:11px; height:11px;top:3px; margin-right:4px;}';
+    v += '.rmColorPicker{background:white;width:240px;outline:1px solid black;position:absolute; top:0px; right:0px; border:10px solid white;}';
+    v += '.rmColorPicker > div{float:left;}.divPaltteColor{width:30px; height:40px;border:0; float:left;}';
+    v += '#context-menu a.rmColorBoxA{padding:1px 0 1px 3px;}';
+    v += '#context-menu a.rmColorBoxA:hover > div.rmColorPicker{display:inline-block;}';
     
     if (fixedHeader) {
 		v += '#quick-search{padding-right:17px;}';
@@ -205,7 +248,7 @@ try {
         v += '#history > div.rmHistoryDivOdd h4 a.journal-link{color:#eee;}';
         v += '#history div:hover h4 a.journal-link{color:#2A5685;}';
         v += '#history > div:hover,#history > div.rmHistoryDivOdd:hover {background:#ddd; }';
-        v += '#history p {padding-left: 225px; margin-bottom:0; margin-top:0; padding-bottom:12px;}';
+        v += '#history p {margin-bottom:0; margin-top:0; padding-bottom:12px;}';
         v += '#history > div{min-height:36px; border-top:1px solid #eee;}';
         v += '#history > div.rmHistoryShort{border-top:0;}';
         v += '#history > div.rmHistoryDivOdd{background:#eee;}';
@@ -226,7 +269,7 @@ try {
 try {
 
     var c = getById('content'),
-        numb,
+        numb, //used also in binding colors
         type = c.getElementsByTagName('h2')[0].innerHTML,
         subj = c.getElementsByTagName('h3')[0],
         titl = document.getElementsByTagName('title')[0];
@@ -996,6 +1039,8 @@ try {
 					cell.className = 'rmCell';
 					curGroupIndex = getSubtaskIndent(tb[u]);
 					
+					var md5_1 = getStoredColor(taskno);
+						
 					if (taskno.toLowerCase().indexOf('group') 	> -1 ||
 						taskno.toLowerCase().indexOf('feature') > -1
 					) {
@@ -1006,7 +1051,7 @@ try {
 							lastGroupColor.shift();
 						}						
 					
-						var m5 = '#' + MD5(taskno).substring(0,6);
+						var m5 = md5_1 || '#' + MD5(taskno).substring(0,6);
 						lastGroupColor.unshift(m5);
 						lastGroupIndex = curGroupIndex;
 						cell.innerHTML = '-';
@@ -1024,7 +1069,8 @@ try {
 						}		
 					
 						if (curGroupIndex >= lastGroupIndex) {
-							cell.style.background = lastGroupColor[0];
+							var m5 = md5_1 || lastGroupColor[0];
+							cell.style.background = m5;
 						}
 						
 					}
@@ -1039,7 +1085,7 @@ try {
 	
 	function changeRowsState(startRow, idntClassIndex, close) {
 	
-		try{
+		try {
 		
 			var n,
 				lastParentIsOpen = [(startRow.getElementsByTagName('td')[1].className.indexOf('rmGOpen') == -1) || !close],
@@ -1222,6 +1268,104 @@ try{
 	}
 
 } catch (e) {console.log('improved history log', e);}
+
+//binding colors to tasks
+try {
+	
+	var CCC = ['#510000','#840000','#B70000','#EA0000','#515100','#848400','#B7B700','#EAEA00','#512800','#844200','#B75B00','#EA7500','#010B6D','#0D527A','#1271A8','#406CFF'];
+	if (document.body.className.indexOf('controller-issues') > -1) {
+		
+		var cmenu = getElementsByClassName('contextual', getById('content'))[0];
+		if (cmenu) {
+		
+			var wtextColor = createElement('div'),
+				wcolor  = createElement('div'),
+				wtext   = createElement('a'),
+				wselect = createElement('div');
+	
+			wtextColor.innerHTML = 'Color';
+			wcolor.className 	= "rmColorBox";
+			wtext.className  	= "rmColorBoxA";
+			wselect.className  	= "rmColorPicker dnone";
+		
+			var tmpWC = getStoredColor(numb);
+			if (tmpWC) {
+				wcolor.style.backgroundColor = tmpWC;
+			}
+		
+			wtext.onclick = function() {
+			
+				if (wselect.className.indexOf('dnone') > -1) {
+					wselect.className = wselect.className.replace('dnone','');
+				} else {
+					wselect.className += 'dnone';
+				}
+				
+			}
+		
+			for (var i = 0; i < CCC.length; ++i) {
+			
+				var tmp = createElement('div');
+				tmp.className = 'divPaltteColor';
+				tmp.style.backgroundColor = CCC[i];
+				wselect.appendChild(tmp);
+				tmp.onclick = function() {
+					
+					var ctm = getById('context-menu');
+					if (ctm && ctm.style.display == 'none') {
+						//from top menu
+						wcolor.style.backgroundColor = this.style.backgroundColor;
+						storeColor(
+							numb,
+							this.style.backgroundColor
+						);
+					} else {
+						//from right click menu
+						var selected = getElementsByClassName('context-menu-selection'), nu;
+						
+						for (var i = 0, ci = selected.length; i < ci; ++i) {
+							nu = parseInt(selected[i].className.match(/issue-[0-9]+/)[0].split('-')[1], 10);
+							storeColor(
+								'#' + nu,
+								this.style.backgroundColor
+							);
+							selected[i].className = selected[i].className.replace('context-menu-selection','');
+						}
+						
+					}
+					
+				}
+				
+			}
+		
+			wtext.appendChild(wcolor);
+			wtext.appendChild(wtextColor);
+			wtext.appendChild(wselect);
+			cmenu.appendChild(wtext);
+		} // /if cmenu
+	}
+
+	//hook to right mouse key
+	var scr = createElement('script'),
+		clk = createElement('button');
+	scr.type="text/javascript";
+	scr.innerHTML = 'window.parseStylesheets = function(){document.getElementById("cmOnclicker").onclick();}';
+	
+	clk.id = 'cmOnclicker';
+	clk.onclick=function(){
+		var contextMenu = getById('context-menu'),
+			ul = contextMenu.getElementsByTagName('ul')[0],
+			li = createElement('li');
+			
+		li.appendChild(wtext);
+		ul.appendChild(li);
+	}
+	
+	//
+	document.body.appendChild(clk);
+	document.body.appendChild(scr);
+	
+} catch (e) {console.log('binding colors to tasks', e);}
 
 //script panel
 try {
