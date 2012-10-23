@@ -5,7 +5,7 @@
 // @include        http://pm.csgbox.com*
 // @include        http://redmine-dev.csgbox.com*
 // @author         Pawel 'lord_t' Maruszczyk
-// @version        22.0
+// @version        23.0
 // @grant GM_setValue
 // @grant GM_getValue
 // @grant GM_addStyle
@@ -14,7 +14,7 @@
     
 //============================================================================================
 
-var ver = 'redminebooster.version.22';
+var ver = 'redminebooster.version.23';
 
 //== local GM storage 4 chrm
 if (typeof GM_deleteValue == 'undefined') {  
@@ -49,6 +49,7 @@ var subtaskCollpsd	= getStoredValue('ssc', false);
 var timeLogsRemovd	= getStoredValue('tlr', true);
 var savingComEdits	= getStoredValue('sce', false);
 var newHistFotrmat	= getStoredValue('nhf', true);
+var showTimeButtons	= getStoredValue('stb', true);
 
 //colors
 var memoryKey = 'colors2';
@@ -190,10 +191,9 @@ try {
     var s = createElement('div'), v;
     document.body.appendChild(s);
     v = '<style type="text/css">';
-	//v += 'tr.issue.idnt-2 td.subject:before{content:"<div>asd</div>";display:block;}';
 	v += '.rmCell{width:14px;color:black;text-shadow:-1px -1px #fff;cursor:auto;}.rmCollapse{cursor:pointer;}';
 	v += '#rmSaving{border-bottom: 1px solid gray;position:fixed; top:0; left:0px; width:100%;line-height:30px; height:30px; text-align:center; background:white; z-index:1002;}';
-	v += '#rmSaving img{margin-right:10px;}';
+	v += '#rmSaving img{margin-right:10px;}.cmOnclicker{display:none;}';
     v += '.rmServerOffline.rmNewVersionAvailable{display:none !important;} ';
     v += '.rmNewVersionAvailable{display:block !important;font-weight:bold;margin:0 30px;} ';
 	v += '#top-menu .rmNewVersionAvailable a {color:red;background:white;}';
@@ -211,6 +211,7 @@ try {
 	v += '.rmButtonSwitcher{cursor:pointer;color:#2A5685;}';
 	v += '#context-menu{z-index:1005 !important;}';
 	v += '.rmNew{color:red;background:white;}';
+	v += '.rmTimesWrapper{display:inline-block;}.rmTimesWrapper input[type="button"]{width:28px;}#time_entry_hours{width:30px;}';
 	
 	if (fullName && !mediumAvatars) {
 		v += '.rmListAvatar{width:160px;}';
@@ -316,7 +317,7 @@ try {
     
 } catch (e) {console.log(e);}
 
-//skroty
+//shortcuts
 try {
     
     var SPECIAL_KEYS 	= {shift:0, ctrl:0, alt:0},
@@ -334,6 +335,21 @@ try {
 			
 			updateDiv.style.display = 'block';
 			window.scrollTo(0, parseInt(updateDiv.offsetTop - 100,10));
+
+			return false;
+		}
+		
+		return true;
+    }
+	
+	function showUpdateTimeLogs() {
+
+		var teh_ = getById('time_entry_hours');
+        if (teh_ && updateDiv) {
+		
+			updateDiv.style.display = 'block';
+			teh_.focus();
+			window.scrollTo(0, parseInt(teh_.offsetTop - 100,10));
 
 			return false;
 		}
@@ -459,8 +475,10 @@ function KeyCheckDown(e) {
                     }
                     
                     break;
-        case 'm':   showEdit(1);  break;
-        case 'n':   location.href = getElementsByClassName('new-issue')[0].href;  break;
+		case 'm':   showEdit(1);  			break;
+		case 'k':   showUpdateTimeLogs();  	break;
+        case 'l':   location.href = getElementsByClassName('icon-time-add')[0].href;  	break;
+        case 'n':   location.href = getElementsByClassName('new-issue')[0].href;  		break;
         case 'r':   
                     var relation = getById('new-relation-form');
             
@@ -1367,6 +1385,36 @@ try {
 	
 } catch (e) {console.log('binding colors to tasks', e);}
 
+try {
+	
+	function addTimesToInput(input) {
+	
+		if (input.disabled) { return;}
+		var times = [0.5, 1, 2, 3, 5, 8, 13, 20];
+		var div = createElement('div');
+		input.parentNode.insertBefore(div, input);
+		div.className = 'rmTimesWrapper';
+		div.appendChild(input);
+		div.appendChild(document.createTextNode(' '));
+		
+		for (var i = 0, ci = times.length; i < ci; ++i) {
+			div.appendChild(createElement('input'));
+			div.lastChild.value 	= times[i];
+			div.lastChild.type 		= 'button';
+			div.lastChild.onclick	= function() {
+				input.value = parseFloat(this.value);
+			}
+		}
+		
+	}
+
+	if (showTimeButtons) {
+		addTimesToInput(getById('time_entry_hours'));
+		addTimesToInput(getById('issue_estimated_hours'));
+	}
+
+} catch (e) {console.log('adding time buttons', e);}
+
 //script panel
 try {
 
@@ -1420,7 +1468,8 @@ try {
         {setName: 'ssc', description: 'Subtasks collapsed by default', 	defau:false},
         {setName: 'tlr', description: 'Remove time logs in edit', 		defau:true},
         {setName: 'sce', description: 'CTRL+S with comments edits (see /1)', 	defau:false},
-        {setName: 'nhf', description: 'Short & fancy history layout', 	defau:true, nevv: true},
+        {setName: 'nhf', description: 'Short & fancy history layout', 	defau:true},
+        {setName: 'stb', description: 'Show time buttons(estimate/log time)', 	defau:true, nevv: true},
 		{description: '[save button]'},
 		{description: ''},
 		{description: '* * Other features * * *'},
@@ -1433,11 +1482,12 @@ try {
 		{description: 'Selects to buttons option'},
 		{description: 'Sorting by polish in Assignee'},
 		{description: 'Fancy information about blocking & duplicates'},
-		{description: 'Fancy information about suspended status', nevv: true},
+		{description: 'Fancy information about suspended status'},
 		{description: 'Avatars in tasks lists'},
 		{description: 'Thumbnails of images'},
 		{description: 'Checking availability of new versions'},
 		{description: 'Collapsing groups in subtasks list'},
+		{description: 'Choosing color for tasks (for collapsing purpose)', nevv: true},
 		{description: '/1 Comment edit has higher priority than ticket update'},
 		{description: '&nbsp;&nbsp;&nbsp;To save com. edit with shortcut you can`t have 2+ opened edits'}
 		
@@ -1533,9 +1583,11 @@ try {
     }
 
     addShortcutTo('e','.icon-edit');
+    addShortcutTo('l','.icon-time-add');
     addShortcutTo('n','.new-issue');
     try{addShortcutTo('r', getById('relations').getElementsByTagName('strong')[0]); }catch(e){}
     try{addShortcutTo('m', getById('issue_description_and_toolbar').parentNode.getElementsByTagName('label')[0]); }catch(e){}
+	try{addShortcutTo('k', getById('issue-form').getElementsByTagName('fieldset')[1].getElementsByTagName('legend')[0]); }catch(e){}
 	try{addShortcutTo('c', getById('issue-form').getElementsByTagName('fieldset')[2].getElementsByTagName('legend')[0]); }catch(e){}
 	
 	var bclass 	= document.body.className;
